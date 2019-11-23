@@ -22,20 +22,20 @@ class TimeConversionServerTests {
 
 		//tr.URL_TIMEZONE = "https://timeconversion.herokuapp.com/convert";
 		String response = sGR(tr.URL_TIMEZONE + "?from=" + tr.original_timezone + "&to=" + tr.result_timezone + "&time=" + tr.original_timestamp);
-		System.out.println("response = " + response);
+		LoggingController.logger.debug("response = " + response);
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		Pattern result_errorP = Pattern.compile(".*\"error\"\\s*:\\s*\"(.[^,}\"]+)?");
 		Matcher result_errorM = result_errorP.matcher(response);
 		if (result_errorM.find() && result_errorM.group(1) != null)
-			System.out.println("Error: " + result_errorM.group(1));
+			LoggingController.logger.error("Error: " + result_errorM.group(1));
 		else {
 			Pattern result_timestampP = Pattern.compile(".*\"resultTimestamp\"\\s*:\\s*\"(.[^,}\"\\s]*)?");
 			Matcher result_timestampM = result_timestampP.matcher(response);
 			if (result_timestampM.find()) {
-				System.out.println("Time converted from: " + dateFormat.format(tr.original_timestamp));
-				System.out.println("Time converted to:   " + dateFormat.format(Long.parseLong(result_timestampM.group(1))));
+				LoggingController.logger.info("Time converted from: " + dateFormat.format(tr.original_timestamp));
+				LoggingController.logger.info("Time converted to:   " + dateFormat.format(Long.parseLong(result_timestampM.group(1))));
 			}
 		}
 	}
@@ -56,15 +56,14 @@ class TimeConversionServerTests {
 			RestTemplate restTemplate = new RestTemplate();
 			// Send request with GET method, and without Headers.
 			/*String result = restTemplate.getForObject(request1, String.class);
-			System.out.println(result);/**/
+			LoggingController.logger.info(result);/**/
 			// Send request with GET method, and Headers.
 			ResponseEntity<String> response = restTemplate.exchange(
 					request,
 					HttpMethod.GET,
 					entity,
 					String.class);
-			int i = 5/0;
-
+			//int i = 5/0;
 			return response.getBody();
 		} catch (Exception e) {
 			return "{" + " \"error\" : \"" + e.getMessage() + "\" }";
