@@ -1,6 +1,5 @@
 package com.mokhovav.time_conversion;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,24 +18,26 @@ class TimeConversionServerTests {
 	private TestRequest tr;
 
 	@Test
-	void contextLoads() throws JsonProcessingException {
-		tr.URL_TIMEZONE = "https://timeconversion.herokuapp.com/convert";
+	void contextLoads() {
+
+		//tr.URL_TIMEZONE = "https://timeconversion.herokuapp.com/convert";
 		String response = sGR(tr.URL_TIMEZONE + "?from=" + tr.original_timezone + "&to=" + tr.result_timezone + "&time=" + tr.original_timestamp);
 		System.out.println("response = " + response);
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		Pattern result_timestampP = Pattern.compile(".*\"result_timestamp\"\\s*:\\s*\"(.[^,}\"\\s]*)?");
-		Matcher result_timestampM = result_timestampP.matcher(response);
-		if (result_timestampM.find()) {
-			System.out.println("Time converted from: " + dateFormat.format(tr.original_timestamp));
-			System.out.println("Time converted to:   " + dateFormat.format(Long.parseLong(result_timestampM.group(1))));
-		}
-
 		Pattern result_errorP = Pattern.compile(".*\"error\"\\s*:\\s*\"(.[^,}\"]+)?");
 		Matcher result_errorM = result_errorP.matcher(response);
 		if (result_errorM.find() && result_errorM.group(1) != null)
 			System.out.println("Error: " + result_errorM.group(1));
+		else {
+			Pattern result_timestampP = Pattern.compile(".*\"resultTimestamp\"\\s*:\\s*\"(.[^,}\"\\s]*)?");
+			Matcher result_timestampM = result_timestampP.matcher(response);
+			if (result_timestampM.find()) {
+				System.out.println("Time converted from: " + dateFormat.format(tr.original_timestamp));
+				System.out.println("Time converted to:   " + dateFormat.format(Long.parseLong(result_timestampM.group(1))));
+			}
+		}
 	}
 
 	private String sGR(String request) {
@@ -63,6 +63,8 @@ class TimeConversionServerTests {
 					HttpMethod.GET,
 					entity,
 					String.class);
+			int i = 5/0;
+
 			return response.getBody();
 		} catch (Exception e) {
 			return "{" + " \"error\" : \"" + e.getMessage() + "\" }";

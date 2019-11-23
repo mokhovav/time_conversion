@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="RequestController" class="com.mokhovav.time_conversion.RequestController">
+        <constructor-arg ref="TimeConverter"/>
+    </bean>
+    <bean id="TimeConverter" class="com.mokhovav.time_conversion.TimeConverter" lazy-init="true" scope="singleton">
+        <!--property name="rr" ref="RequestResponse" /-->
+        <constructor-arg ref="RequestResponse" />
+    </bean>
+    <bean id="RequestResponse" class="com.mokhovav.time_conversion.RequestResponse"  lazy-init="true" scope="prototype"/>
+    <bean id="ErrorResponse" class="com.mokhovav.time_conversion.ErrorResponse"  lazy-init="true" scope="prototype"/>
+</beans>
