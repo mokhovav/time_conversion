@@ -14,19 +14,20 @@ import java.util.regex.Pattern;
 
 @SpringBootTest
 class TimeConversionServerTests {
-	@Autowired
-	private TestRequest tr;
+
+	@Autowired private TestRequest tr;
 
 	@Test
 	void contextLoads() {
 
 		//tr.URL_TIMEZONE = "https://timeconversion.herokuapp.com/convert";
 		String response = sGR(tr.URL_TIMEZONE + "?from=" + tr.original_timezone + "&to=" + tr.result_timezone + "&time=" + tr.original_timestamp);
+
 		LoggingController.logger.debug("response = " + response);
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		Pattern result_errorP = Pattern.compile(".*\"error\"\\s*:\\s*\"(.[^,}\"]+)?");
+		Pattern result_errorP = Pattern.compile(".*\"error\"\\s*:\\s*\"(.[^}\"]+)?");
 		Matcher result_errorM = result_errorP.matcher(response);
 		if (result_errorM.find() && result_errorM.group(1) != null)
 			LoggingController.logger.error("Error: " + result_errorM.group(1));
@@ -63,7 +64,6 @@ class TimeConversionServerTests {
 					HttpMethod.GET,
 					entity,
 					String.class);
-			//int i = 5/0;
 			return response.getBody();
 		} catch (Exception e) {
 			return "{" + " \"error\" : \"" + e.getMessage() + "\" }";

@@ -1,13 +1,15 @@
 package com.mokhovav.time_conversion;
-
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class RequestController {
 
     private TimeConverter tc;
-    public RequestController(TimeConverter tc) {
+    private ErrorResponse er;
+
+    public RequestController(TimeConverter tc, ErrorResponse er){
         this.tc = tc;
+        this.er = er;
     }
 
     @RequestMapping(
@@ -16,7 +18,7 @@ public class RequestController {
             consumes="application/json",
             produces="application/json",
             params = { "to", "time" })
-    public RequestResponse get(
+    private RequestResponse get(
             @RequestParam(name = "from", required = false, defaultValue = "Europe/Moscow") String from,
             @RequestParam(name = "to") String to,
             @RequestParam(name = "time") long time) {
@@ -24,8 +26,7 @@ public class RequestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ErrorResponse  handleException(Exception exception) {
-        ErrorResponse er = new ErrorResponse();
+    private ErrorResponse  handleException(Exception exception) {
         er.error = exception.getMessage();
         return er;
     }
