@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.*;
 public class RequestController {
 
     private TimeConverter tc;
-    private ErrorResponse er;
+    //private ErrorResponse er;
 
     public RequestController(TimeConverter tc, ErrorResponse er){
         this.tc = tc;
-        this.er = er;
+        //this.er = er;
     }
 
     @RequestMapping(
@@ -27,6 +27,7 @@ public class RequestController {
 
     @ExceptionHandler(Exception.class)
     private ErrorResponse  handleException(Exception exception) {
+        ErrorResponse er = new ErrorResponse();
         er.error = exception.getMessage();
         return er;
     }

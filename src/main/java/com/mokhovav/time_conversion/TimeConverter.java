@@ -10,15 +10,16 @@ import java.time.ZonedDateTime;
 
 @Configuration
 @Scope("singleton")
-@ComponentScan(basePackages = "com.mokhovav.time_conversion")
+
 public class TimeConverter {
 
-    private RequestResponse rr;
-    public TimeConverter(RequestResponse rr){
-        this.rr = rr;
-    }
+    //private RequestResponse rr;
+    //public TimeConverter(RequestResponse rr){
+    //    this.rr = rr;
+    //}
 
     public RequestResponse conversionTimeZone(String from, String to, long time) {
+        RequestResponse rr = new RequestResponse();
         rr.originalTimestamp = String.valueOf(time);
         rr.originalTimezone = from;
         rr.resultTimezone = to;
